@@ -1,3 +1,4 @@
+#[derive(Debug)] // Is required in order to display our deck using the debug formatter "{:?}"
 struct Deck {
     cards: Vec<String>,
 }
@@ -12,7 +13,7 @@ fn main() {
     // let deck = Deck { cards: Vec::new() }; // This is equivalent to the above line of code (this is written using the function)
 
     // Display your deck
-    println!("1) Here's your deck: {:?}", deck);
-    println!("2) Here's your deck: {}", deck);
-    println!("3) Here's your deck: {deck}");
+    println!("Here's your deck: {:?}", deck); // ":?" is a (debug) formatter
+    //println!("Here's your deck: {}", deck);
+    //println!("Here's your deck: {deck}");
 }
