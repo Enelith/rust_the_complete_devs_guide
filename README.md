@@ -22,7 +22,7 @@ If you get an error then a little troubleshooting is in order.
 
 *Cargo is used to create, compile, run and manage projects.*
 
-| In order to... | ... Use the following command                                                     |
+| In order to... | ... Use the following command |
 |:--------------------|:----------------------------------------------------|
-| `Create a new project`      | `cargo new <project_name>` |
-| `Run a project`     | `cargo run`                                                    |
+| Create a new project | `cargo new <project_name>` |
+| Run a project | `cargo run` |
