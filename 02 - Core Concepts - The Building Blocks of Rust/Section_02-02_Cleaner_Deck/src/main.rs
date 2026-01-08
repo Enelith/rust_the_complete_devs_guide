@@ -30,11 +30,17 @@ impl Deck {
         let deck = Deck { cards };
         deck // is EQUALS to "return deck;" ; we could even just write "Deck { cards }" instead of creating a binding "deck"
     }
+
+    fn shuffle(&self) {
+
+    }
 }
 
 // In Rust, the "main" function will always be called when running the program
 fn main() {
     let deck = Deck::new();
+
+    deck.shuffle();
 
     println!("Here's your deck: {:#?}", deck); // Adding a "#" to the debug formatter will render it much better / easier to read.
 }
