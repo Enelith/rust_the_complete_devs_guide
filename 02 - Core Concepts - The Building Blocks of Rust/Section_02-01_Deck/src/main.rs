@@ -10,11 +10,11 @@ fn main() {
     println!(" ==================================== ");
 
     // Let's declare a new variable (in Rust, it's called a "binding" ~ so let's declare a new binding)
-    let emptyDeck = Deck { cards: vec![] }; // This is writing using the macro
+    let empty_deck = Deck { cards: vec![] }; // This is writing using the macro
     // let deck = Deck { cards: Vec::new() }; // This is equivalent to the above line of code (this is written using the function)
 
     // Display your deck
-    println!("Here's your empty deck: {:?}", emptyDeck); // ":?" is a (debug) formatter
+    println!("Here's your empty deck: {:?}", empty_deck); // ":?" is a (debug) formatter
     //println!("Here's your deck: {}", deck);
     //println!("Here's your deck: {deck}");
     println!(" ==================================== ");
