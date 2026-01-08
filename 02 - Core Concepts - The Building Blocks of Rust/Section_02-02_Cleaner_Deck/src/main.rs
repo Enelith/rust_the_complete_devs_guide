@@ -51,6 +51,10 @@ impl Deck {
 
         self.cards.shuffle(&mut rng)
     }
+
+    fn deal(&mut self, num_cards: usize) -> Vec<String>{
+        self.cards.split_off(self.cards.len() - num_cards)
+    }
 }
 
 // In Rust, the "main" function will always be called when running the program
@@ -59,7 +63,13 @@ fn main() {
     // Ergo, we need to qualify 'deck' with the keyword 'mut'
     let mut deck = Deck::new();
 
-    deck.shuffle();
+    println!("Here's your original deck: {:#?}", deck); // Adding a "#" to the debug formatter will render it much better / easier to read.
 
-    println!("Here's your deck: {:#?}", deck); // Adding a "#" to the debug formatter will render it much better / easier to read.
+    deck.shuffle();
+    println!("Here's your shuffled deck: {:#?}", deck);
+
+    // THIS LINE WILL NEED SOME ERROR HANDLING, IN CASE THE NUMBER OF CARDS > LEN(DECK)
+    let hand = deck.deal(2);
+    println!("Here's your hand: {:#?}", hand);
+    println!("Here's what's left of the shuffled deck: {:#?}", deck);
 }
