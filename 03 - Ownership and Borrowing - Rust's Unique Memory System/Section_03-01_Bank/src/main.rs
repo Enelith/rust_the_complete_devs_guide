@@ -26,6 +26,17 @@ impl Bank {
     }
 }
 
+fn print_account(account: Account) {
+    println!("Account: {:#?}", account);
+}
+
 fn main() {
-    println!("Hello, world!");
+    let bank = Bank::new();
+    let account = Account::new(1, String::from("myAccount"));
+
+    println!("Bank: {:#?}", bank);
+
+    print_account(account);
+    // Let generate a bug: "Value used after being moved"
+    print_account(account);
 }
