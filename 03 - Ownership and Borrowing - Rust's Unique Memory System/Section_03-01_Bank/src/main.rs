@@ -5,9 +5,25 @@ struct Account {
     holder: String,
 }
 
+impl Account {
+    fn new(id: u32, holder: String) -> Self {
+        Account {
+            id,
+            balance: 0,
+            holder,
+        }
+    }
+}
+
 #[derive(Debug)]
 struct Bank {
     accounts: Vec<Account>,
+}
+
+impl Bank {
+    fn new() -> Self {
+        Bank { accounts: vec![] }
+    }
 }
 
 fn main() {
