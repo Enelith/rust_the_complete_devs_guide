@@ -114,8 +114,8 @@ Let's now fill the following tables we left in Section 03.
 |:--------------------------------------------------------|:---------------------------|:------|:-----|:-------|
 | `Create a 'Bank' instance`                              | Assoc. Function            | new() | -    | Bank   |
 | `Add an account to the list of accounts`                | Method | add_account()       | account: Account     | -        |
-| `Calculate the total balance of all accounts`           |                            |       |      |        |
-| `Create a Vec containing the summaries of all accounts` |                            |       |      |        |
+| `Calculate the total balance of all accounts`           | Method | total_balance() | - | i32 |
+| `Create a Vec containing the summaries of all accounts` | Method | summary() | - | Vec<String> |
 
 --- 
 
@@ -126,7 +126,7 @@ Let's now fill the following tables we left in Section 03.
 | `Create an 'Account' instance`                                 | Assoc. Function            | new() | id: u32, holder: string | Account |
 | `Add the given amount of money to the accounts 'balance'`      | Method | deposit() | amount: i32 | i32 |
 | `Remove the given amount of money from the accounts 'balance'` | Method | withdraw() | amount: i32 | i32 |
-| `Create an account summary as a string and return it`          |                            |       |                         |         |
+| `Create an account summary as a string and return it`          | Method | summary() | - | String |
 
 Note:
 - For the Account.deposit() and Account.withdraw() args, remember **Rule #7**, where some type of data will be copied when moved (which is the case with i32, so having a value as argument or a immutable ref makes really no difference in this case...)
