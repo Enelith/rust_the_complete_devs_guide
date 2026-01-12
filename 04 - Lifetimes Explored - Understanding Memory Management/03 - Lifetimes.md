@@ -124,6 +124,9 @@ Let's now fill the following tables we left in Section 03.
 | Description                                                    | Method or Assoc. Function? | Name  | Args                    | Return  |
 |:---------------------------------------------------------------|:---------------------------|:------|:------------------------|:--------|
 | `Create an 'Account' instance`                                 | Assoc. Function            | new() | id: u32, holder: string | Account |
-| `Add the given amount of money to the accounts 'balance'`      |                            |       |                         |         |
-| `Remove the given amount of money from the accounts 'balance'` |                            |       |                         |         |
+| `Add the given amount of money to the accounts 'balance'`      | Method | deposit() | amount: i32 | i32 |
+| `Remove the given amount of money from the accounts 'balance'` | Method | withdraw() | amount: i32 | i32 |
 | `Create an account summary as a string and return it`          |                            |       |                         |         |
+
+Note:
+- For the Account.deposit() and Account.withdraw() args, remember **Rule #7**, where some type of data will be copied when moved (which is the case with i32, so having a value as argument or a immutable ref makes really no difference in this case...)
