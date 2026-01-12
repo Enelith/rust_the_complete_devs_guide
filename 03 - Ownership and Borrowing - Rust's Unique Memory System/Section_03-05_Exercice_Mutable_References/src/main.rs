@@ -31,12 +31,16 @@ impl Bank {
 // then add the 'account' to the bank's list of accounts
 // Note: to add an element to a vector, you use the push method
 // like this: 'bank.accounts.push(account)
+fn add_account(bank: &mut Bank, account: Account) {
+    bank.accounts.push(account);
+}
 
 fn main() {
     let mut bank = Bank::new();
     let account = Account::new(1, String::from("me"));
 
     // TODO: call the 'add_account' function here
+    add_account(&mut bank, account);
 
     // Note: we're using the Bank value here, so 'bank' still
     // needs ownership of that value
