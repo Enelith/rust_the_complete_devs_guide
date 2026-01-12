@@ -90,3 +90,40 @@ From the `// HERE!` point, Rust should delete both the `account` binding and the
 
 That's **Rule #9 / #10** quickly explained. 
 <br/>Rust is going to make sure that you never attempt to return a reference to a value, that just is going to go out of scope.
+
+
+## Rule #11
+`11` **These rules will dramatically change how you write code (compared to other languages)**
+- With every **function** we write, we need to think about whether we are **receiving values or refs!**:
+<br/>
+if we're going to take ownership of the arguments or if we're going to receive a reference, and if that reference is going to be mutable or immutable.
+- With every **data structure** we define (a Vector, or a Struct, or a Map, ...), we need to think about whether we are **storing values or refs!** 
+
+### Function Argument Types
+- *Need to store the argument somewhere ?* -> Favor taking ownership (receive a value)
+- *Need to do calcultation with the value ?* -> Favor receiving a read-only ref
+- *Need to change the value in some way ?* -> Favor receiving a mutable ref
+
+Let's now fill the following tables we left in Section 03.
+
+--- 
+
+### Bank
+
+| Description                                             | Method or Assoc. Function? | Name  | Args | Return |
+|:--------------------------------------------------------|:---------------------------|:------|:-----|:-------|
+| `Create a 'Bank' instance`                              | Assoc. Function            | new() | -    | Bank   |
+| `Add an account to the list of accounts`                | Method | add_account()       | account: Account     | -        |
+| `Calculate the total balance of all accounts`           |                            |       |      |        |
+| `Create a Vec containing the summaries of all accounts` |                            |       |      |        |
+
+--- 
+
+### Account
+
+| Description                                                    | Method or Assoc. Function? | Name  | Args                    | Return  |
+|:---------------------------------------------------------------|:---------------------------|:------|:------------------------|:--------|
+| `Create an 'Account' instance`                                 | Assoc. Function            | new() | id: u32, holder: string | Account |
+| `Add the given amount of money to the accounts 'balance'`      |                            |       |                         |         |
+| `Remove the given amount of money from the accounts 'balance'` |                            |       |                         |         |
+| `Create an account summary as a string and return it`          |                            |       |                         |         |
