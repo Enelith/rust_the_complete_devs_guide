@@ -31,6 +31,9 @@ impl Bank {
 // of accounts stored in the 'bank.accounts' vector
 // To get the number of elements in a vector, you can use the '.len()'
 // method like this: 'bank.accounts.len()'
+fn print_num_accounts(bank: &Bank) {
+    println!("Number of accounts: {}", bank.accounts.len());
+}
 
 
 fn main() {
@@ -42,7 +45,7 @@ fn main() {
     bank.accounts.push(account2);
 
     // TODO: call 'print_num_accounts' here:
-
+    print_num_accounts(&bank);
 
     // Notice the existing println statement here! 'main' needs to use the
     // 'bank' value in two locations, so we probably shouldn't move the
