@@ -1,0 +1,6 @@
+[package]
+name = "Section_03-04_Exercice_References"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
