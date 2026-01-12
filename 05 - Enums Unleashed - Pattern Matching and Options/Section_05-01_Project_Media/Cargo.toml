@@ -1,0 +1,6 @@
+[package]
+name = "Section_05-01_Project_Media"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
