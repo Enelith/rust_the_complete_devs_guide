@@ -57,6 +57,8 @@ enum Media {
 - Book, Movie and Audiobook are all of type `Media`
 - We can define functions that accept values of type `Media`, and put in a Book, a Movie, or an Audiobook
 
+Each elements of an Enum (in this example, `Book`, `Movie`, and `Audiobook`) are called `variants` (`variantes` in french).
+
 ### Adding methods to Enums
 We want to add specific methods for our Enum, which will have a different behaviour depending on which kind of Enum we're dealing with.
 
@@ -140,13 +142,14 @@ impl Media {
             Media::Audiobook { title } => {
                 format!("Audiobook: {}", title)
             }
-            _ => String::from("Media description"),
         }
     } 
 }
 ```
 - The 1st way is more verbose and uses a very basic type checking, but it's mostly use with **error handling**
 - The 2nd way uses Pattern Matching statements and is usually the more favored way to handle Enums when you're trying to figure out what type the Enum is. 
+
+Note that the Matches statement can get dense pretty quickly depending on how many fields / properties there are.
 
 ### When to use Structs vs Enums
 Deciding when to use enums vs structs is tricky.
@@ -194,8 +197,95 @@ audiobook.listen(); // an audiobook can be 'listened' to
 
 Then we probably want to use **structs**.
 
----
-Note that the Matches statments can get dense pretty quickly depending on how many fields / properties there are.
+### Adding new Variants & Unlabeled Fields
+
+As it is, the current enum `Media` has 3 variants:
+```
+enum Media {
+    Book { title: String, author: String },
+    Movie { title: String, director: String },
+    Audiobook { title: String }
+}
+```
+We would like to add 2 additional variants. We want to add a `Podcast` variant, and a `Placeholder` variant.
+
+Thinking about what kind of data we could add to those variants:
+- we can't really think of any data associated with a `Placeholder` (there's no really an id, a title, an author, ...).
+<br/>
+In this case of variants without any data added to it, we can omit the curly braces all together (instead of `Placeholder { }`, we'll write `Placeholder`).
+- maybe a `Podcast` should have an `episode_number` (u32), but `episode_number` is a little bit long, so what we can do is to write `Podcast { episode_number: u32 }` => `Podcast(u32)` (note the use of parenthesis).
+<br/>
+It's now going to be implied that the value within parenthesis `(u32)` is meant the represent the `episode_number`.
+```
+enum Media {
+    Book { title: String, author: String },
+    Movie { title: String, director: String },
+    Audiobook { title: String },
+    Podcast(u32),
+    Placeholder,
+}
+```
+
+Now, the questions become: 
+- How do we work with a variant that has a raw value assigned to it (`Podcast(u32)`)?
+- How do we work with a variant that has no data attached to it (`Placeholder`)?
+
+We'll notice in our function an error:
+```
+    fn description_2(&self) -> String {
+        match self { // <= HERE!
+            Media::Book { title, author } => {
+                format!("Book: {} {}", title, author)
+            }
+            Media::Movie { title, director } => {
+                format!("Movie: {} {}", title, director)
+            }
+            Media::Audiobook { title } => {
+                format!("Audiobook: {}", title)
+            }
+        }
+    } 
+```
+The error is as followed:
+```
+non-exhaustive patterns: `&Media::Podcast(_)` and `&Media::Placeholder` not covered [E0004]
+patterns `&Media::Podcast(_)` and `&Media::Placeholder` not covered
+Note: `Media` defined here
+Note: the matched value is of type `&Media`
+Help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern, a match arm with multiple or-patterns as shown, or multiple match arms
+```
+When using a Pattern Matching Statement on an Enum, we have to cover every possible case.
+
+Let's add the additional ones:
+```
+    fn description_2(&self) -> String {
+        match self { // <= HERE!
+            Media::Book { title, author } => {
+                format!("Book: {} {}", title, author)
+            }
+            Media::Movie { title, director } => {
+                format!("Movie: {} {}", title, director)
+            }
+            Media::Audiobook { title } => {
+                format!("Audiobook: {}", title)
+            }
+            Media::Podcast(episode_number) => {
+                format!("Podcast: {}", episode_number)
+            }
+            Media::Placeholder => {
+                format!("Placeholder")
+            }
+        }
+    } 
+```
+When adding the `Podcast` variant, to get that number `u32` which will represent that `episode_number`, 
+- we're adding parenthesis after `Media::Podcast` 
+- and within those parenthesis, write `episode_number` 
+<br/>
+(It can actually be called however we want, there's no requirements to call it `episode_number` as we didn't specially named it in its `Media` enum definition 
+~ **The meaning behind the value is therefore quite unintuitive in case of those Unlabeled Fields**).
+
+When adding the `Placeholder` variant, since there are no data associated with `Placeholder`, we just write `Media::Placeholder` followed by its function behaviour.
 
 ## Getting Started
 
