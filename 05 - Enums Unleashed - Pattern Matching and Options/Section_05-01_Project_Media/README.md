@@ -57,6 +57,97 @@ enum Media {
 - Book, Movie and Audiobook are all of type `Media`
 - We can define functions that accept values of type `Media`, and put in a Book, a Movie, or an Audiobook
 
+### Adding methods to Enums
+We want to add specific methods for our Enum, which will have a different behaviour depending on which kind of Enum we're dealing with.
+
+First let's see how we would do it with Structs.
+<br/>
+Based on the Structs we had before, we would have 3 separate **implementations**, one for each Struct.
+
+```
+struct Book {
+	title: String,
+	author: String,
+}
+
+struct Movie {
+	title: String,
+	director: String,
+}
+
+struct Audiobook {
+	title: String,
+}
+
+impl Book {
+	fn description(&self) -> String {
+		format!("Book: {} {}", self.title, self.author)
+	}
+}
+
+impl Movie {
+	fn description(&self) -> String {
+		format!("Movie: {} {}", self.title, self.director)
+	}
+}
+
+impl Audiobook {
+	fn description(&self) -> String {
+		format!("Audiobook: {}", self.title)
+	}
+}
+```
+While it would 100%, it's a lot of (duplicated) code.
+
+The nice thing with Enums is that we can achieve something similar by defining just one single implementation block.
+
+In our example, we don't know what kind of Media is `self` (Book? Movie? Audiobook?), and until we figure out, Rust won't allow us to access any properties on `self`, **even if they're coming to all 3 types** (while all 3 have a common `title` field, you would get an error such as *No field `title` in type `&Media` [E0609]* when trying to access `self.title`).
+
+There are 2 different ways we can do it: 
+```
+enum Media {
+    Book { title: String, author: String },
+    Movie { title: String, director: String },
+    Audiobook { title: String }
+}
+
+impl Media {
+    // 1st way: verbose, with very basic type check
+    fn description_1(&self) -> String {
+        if let Media::Book{ title, author } = self {
+            // if we have a book
+            format!("Book: {} {}", self.title, self.author)
+        } else if let Media::Movie{ title, director } = self {
+            // if we have a movie
+            format!("Movie: {} {}", self.title, self.director)
+        } else if let Media::Audiobook{ title } = self {
+            // if we have an audiobook
+            format!("Audiobook: {}", self.title)
+        } else {
+            String::format("Media description")
+        }
+    }
+
+    // 2nd way: Pattern Matching statment
+    fn description_2(&self) -> String {
+        match self {
+            Media::Book { title, author } => {
+                format!("Book: {} {}", title, author)
+            }
+            Media::Movie { title, director } => {
+                format!("Movie: {} {}", title, director)
+            }
+            Media::Audiobook { title } => {
+                format!("Audiobook: {}", title)
+            }
+            _ => String::from("Media description"),
+        }
+    } 
+}
+```
+- The 1st way is more verbose and uses a very basic type checking, but it's mostly use with **error handling**
+- The 2nd way uses Pattern Matching statements and is usually the more favored way to handle Enums when you're trying to figure out what type the Enum is. 
+
 ## Getting Started
 
 To run the project, ensure you have Rust installed and run:
