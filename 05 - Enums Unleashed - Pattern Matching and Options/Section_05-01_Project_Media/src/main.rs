@@ -105,4 +105,26 @@ fn main() {
     catalog.add(placeholder);
 
     println!("{{catalog}} {:#?}", catalog);
+
+    // Option Enum
+    // Will return "Some(...)" or "None"
+    println!("{:#?}", catalog.items.get(0));
+
+    match catalog.items.get(0) {
+        Option::Some(value) => {
+            println!("Item: {:#?}", value);
+        }
+        Option::None => {
+            println!("Nothing at that index");
+        }
+    }
+
+    match catalog.items.get(100) {
+        Option::Some(value) => {
+            println!("Item: {:#?}", value);
+        }
+        Option::None => {
+            println!("Nothing at that index");
+        }
+    }
 }

@@ -114,7 +114,7 @@ enum Media {
 }
 
 impl Media {
-    // 1st way: verbose, with very basic type check
+    // 1st way: Pattern Matching ~ verbose, with very basic type check
     fn description_1(&self) -> String {
         if let Media::Book{ title, author } = self {
             // if we have a book
@@ -130,7 +130,7 @@ impl Media {
         }
     }
 
-    // 2nd way: Pattern Matching statment
+    // 2nd way: Match Statement
     fn description_2(&self) -> String {
         match self {
             Media::Book { title, author } => {
@@ -146,10 +146,10 @@ impl Media {
     } 
 }
 ```
-- The 1st way is more verbose and uses a very basic type checking, but it's mostly use with **error handling**
-- The 2nd way uses Pattern Matching statements and is usually the more favored way to handle Enums when you're trying to figure out what type the Enum is. 
+- The 1st way is **Pattern Matching** ~ more verbose and uses a very basic type checking, but it's mostly use with **error handling**
+- The 2nd way uses **Match Statements** and is usually the more favored way to handle Enums when you're trying to figure out what type the Enum is. 
 
-Note that the Matches statement can get dense pretty quickly depending on how many fields / properties there are.
+Note that the Match statement can get dense pretty quickly depending on how many fields / properties there are.
 
 ### When to use Structs vs Enums
 Deciding when to use enums vs structs is tricky.
@@ -254,7 +254,7 @@ Note: `Media` defined here
 Note: the matched value is of type `&Media`
 Help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern, a match arm with multiple or-patterns as shown, or multiple match arms
 ```
-When using a Pattern Matching Statement on an Enum, we have to cover every possible case.
+When using a Match Statement on an Enum, we have to cover every possible case.
 
 Let's add the additional ones:
 ```
@@ -287,6 +287,64 @@ When adding the `Podcast` variant, to get that number `u32` which will represent
 
 When adding the `Placeholder` variant, since there are no data associated with `Placeholder`, we just write `Media::Placeholder` followed by its function behaviour.
 
+## How do we access a Media inside our Catalog? 
+
+You only need to use the methode `.get(X)` on your collection.
+```
+catalog.items.get(0) => Will return the Media item at rank 0 of your Vec<Media>
+```
+So writing the following will also return when run:
+```
+println!("{:#?}", catalog.items.get(0));
+
+Result:
+Some(
+    Audiobook {
+        title: "audiobook",
+    },
+)
+```
+It looks like the result `Audiobook { title: "audiobook" }` is wrapped in an extra something here: `Some(...)`.
+
+Running the following will return:
+
+```
+println!("{:#?}", catalog.items.get(100)); // We don't have 100 elements in our catalog.items
+
+Result:
+None
+```
+
+So what's the meaning behind `Some` and `None` here?
+
+### The Option Enum
+```
+enum Option {
+  Some(value), 
+  None
+}
+```
+- **Rust doesn't have null, nil or undefined**  
+- Instead, we get a built-in enum called `Option`
+- `Option` has 2 variants ~ `Some` and `None`
+- `Some` has a single value assigned to it
+- If you want to work with `Option`, you have to use Pattern Matching (the `if let` thing) or a Match Statement
+- It forces you to handle the case in which you have a value and the case in which you don't
+
+In our code, in the `catalog.items.get(0)`, `.get(0)` returns an Option, so if we want to use the value, we need to use a Match Statement:
+
+```
+// Note that the Path prefix 'Option::' is not necessary since it's built-in
+
+match catalog.items.get(0) {
+  Option::Some(value) => {
+    println!("Item: {:#?}", value);
+  }
+  Option::None => {
+    println!("Nothing at that index");
+  }
+}
+```
 ## Getting Started
 
 To run the project, ensure you have Rust installed and run:
