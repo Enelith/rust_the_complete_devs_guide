@@ -38,10 +38,7 @@ impl Media {
             Media::Podcast(episode_number) => {
                 format!("Podcast: {}", episode_number)
             }
-            Media::Placeholder => {
-                "Placeholder".to_string()
-            }
-//            _ => String::from("Media description"),
+            Media::Placeholder => "Placeholder".to_string(), //            _ => String::from("Media description"),
         }
     }
 }
@@ -60,6 +57,30 @@ impl Catalog {
     fn add(&mut self, media: Media) {
         self.items.push(media);
     }
+
+    // This implementation will crash if index > catalog.items.len() (length)
+    fn get_by_index_faulty(&self, index: usize) -> &Media {
+        //self.items[index] // Warning: this will return the OWNERSHIP, which is not something we want to do
+        &self.items[index]
+    }
+
+    // Fixed version, which will use an emulation of the Option Enum to simulate the null/nil/undefined values
+    fn get_by_index(&self, index: usize) -> MightHaveValue {
+        if self.items.len() > index {
+            // Good case
+            MightHaveValue::HasValueAvailable(&self.items[index])
+        } else {
+            // Bad case
+            MightHaveValue::NoValueAvailable
+        }
+    }
+}
+
+#[derive(Debug)]
+enum MightHaveValue<'a >{
+    // HasValueAvailable(&Media), // <= Missing lifetime specifier [E0106]
+    HasValueAvailable(&'a Media), // for now, we're adding the lifetime specifier "' a" and we'll explain it in later lesson
+    NoValueAvailable,
 }
 
 fn print_media(media: Media) {
@@ -106,7 +127,7 @@ fn main() {
 
     println!("{{catalog}} {:#?}", catalog);
 
-    // Option Enum
+    // #53 Option Enum
     // Will return "Some(...)" or "None"
     println!("{:#?}", catalog.items.get(0));
 
@@ -126,5 +147,39 @@ fn main() {
         Option::None => {
             println!("Nothing at that index");
         }
+    }
+
+    // #54 Option from another perspective
+    let item_at_0 = catalog.get_by_index_faulty(0);
+    println!("{:#?}", item_at_0);
+    let item_at_4 = catalog.get_by_index_faulty(4);
+    println!("{:#?}", item_at_4);
+    // Will crash
+    /*
+    thread 'main' (8512) panicked at src\main.rs:66:20:
+        index out of bounds: the len is 5 but the index is 40
+    stack backtrace:
+    0: std::panicking::panic_handler
+     */
+    //let item_at_40 = catalog.get_by_index_faulty(40);
+    //println!("{:#?}", item_at_40);
+
+    let item = catalog.get_by_index(40);
+    println!("{:#?}", item);
+    // Match Statement
+    match item {
+        MightHaveValue::HasValueAvailable(value) => {
+            println!("(MightHaveValue::HasValueAvailable) Item: {:#?}", value);
+        }
+        MightHaveValue::NoValueAvailable => {
+            println!("(MightHaveValue::NoValueAvailable) Nothing at that index");
+        }
+    }
+
+    // Pattern Matching
+    if let MightHaveValue::HasValueAvailable(value) = item {
+        println!("(if let MightHaveValue::HasValueAvailable) Item: {:#?}", value);
+    } else if let MightHaveValue::NoValueAvailable = item {
+        println!("(if let MightHaveValue::NoValueAvailable) Nothing at that index");
     }
 }
