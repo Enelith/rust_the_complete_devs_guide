@@ -1,0 +1,6 @@
+[package]
+name = "Section_05-02_Project_Media_Cleanup"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]

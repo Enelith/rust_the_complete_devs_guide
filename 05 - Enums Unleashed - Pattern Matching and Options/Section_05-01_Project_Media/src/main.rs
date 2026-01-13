@@ -38,7 +38,8 @@ impl Media {
             Media::Podcast(episode_number) => {
                 format!("Podcast: {}", episode_number)
             }
-            Media::Placeholder => "Placeholder".to_string(), //            _ => String::from("Media description"),
+            Media::Placeholder => "Placeholder".to_string(),
+//            _ => String::from("Media description"),
         }
     }
 }
