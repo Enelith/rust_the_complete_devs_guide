@@ -148,6 +148,55 @@ impl Media {
 - The 1st way is more verbose and uses a very basic type checking, but it's mostly use with **error handling**
 - The 2nd way uses Pattern Matching statements and is usually the more favored way to handle Enums when you're trying to figure out what type the Enum is. 
 
+### When to use Structs vs Enums
+Deciding when to use enums vs structs is tricky.
+
+In many cases, you can use either.
+
+However, as a general rule of thumbs,  
+- Does each thing you're modeling have the **same methods** ?
+  - You might want to use an **enum**.
+- Does each thing have **some same, but also some different methods** ?
+  - You might want to use **structs**.
+
+---
+
+**Example 1: Enums**
+
+For our app, as described, each thing will have very few methods.
+```
+book.description(); // "Book called 'A Biography' by Jane"
+
+movie.description(); // "Movie called 'Action!' by John"
+
+audiobook.description(); // "Audiobook called 'Fun Time!'"
+```
+Every thing has the exact same set of methods.
+
+So we probably want to use **enums**.
+
+---
+
+**Example 2: Structs**
+
+If our app was more complex, and each thing has **similar methods** (`.description()`)...
+```
+book.description(); // "Book called 'A Biography' by Jane"
+book.read(); // a book can be 'read'
+
+movie.description(); // "Movie called 'Action!' by John"
+movie.play(); // a movie can be 'played'
+
+audiobook.description(); // "Audiobook called 'Fun Time!'"
+audiobook.listen(); // an audiobook can be 'listened' to
+```
+... but also, each thing has some **different methods** (`.read()`, `.play()`, `.listen()`).
+
+Then we probably want to use **structs**.
+
+---
+Note that the Matches statments can get dense pretty quickly depending on how many fields / properties there are.
+
 ## Getting Started
 
 To run the project, ensure you have Rust installed and run:
