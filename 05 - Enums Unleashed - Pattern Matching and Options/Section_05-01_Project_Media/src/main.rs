@@ -65,13 +65,24 @@ impl Catalog {
     }
 
     // Fixed version, which will use an emulation of the Option Enum to simulate the null/nil/undefined values
-    fn get_by_index(&self, index: usize) -> MightHaveValue {
+    fn get_by_index_with_custom_enum(&self, index: usize) -> MightHaveValue {
         if self.items.len() > index {
             // Good case
             MightHaveValue::HasValueAvailable(&self.items[index])
         } else {
             // Bad case
             MightHaveValue::NoValueAvailable
+        }
+    }
+
+    // Fixed version using the built-in Option enum
+    fn get_by_index_with_option(&self, index: usize) -> Option<&Media> {
+        if self.items.len() > index {
+            // Good case
+            Some(&self.items[index])
+        } else {
+            // Bad case
+            None
         }
     }
 }
@@ -164,22 +175,42 @@ fn main() {
     //let item_at_40 = catalog.get_by_index_faulty(40);
     //println!("{:#?}", item_at_40);
 
-    let item = catalog.get_by_index(40);
-    println!("{:#?}", item);
+    let item_with_custom_enum = catalog.get_by_index_with_custom_enum(40);
+    println!("{:#?}", item_with_custom_enum);
     // Match Statement
-    match item {
+    match item_with_custom_enum {
         MightHaveValue::HasValueAvailable(value) => {
-            println!("(MightHaveValue::HasValueAvailable) Item: {:#?}", value);
+            println!("(Matching Statement > MightHaveValue::HasValueAvailable) Item: {:#?}", value);
         }
         MightHaveValue::NoValueAvailable => {
-            println!("(MightHaveValue::NoValueAvailable) Nothing at that index");
+            println!("(Matching Statement > MightHaveValue::NoValueAvailable) Nothing at that index");
         }
     }
 
     // Pattern Matching
-    if let MightHaveValue::HasValueAvailable(value) = item {
-        println!("(if let MightHaveValue::HasValueAvailable) Item: {:#?}", value);
-    } else if let MightHaveValue::NoValueAvailable = item {
-        println!("(if let MightHaveValue::NoValueAvailable) Nothing at that index");
+    if let MightHaveValue::HasValueAvailable(value) = item_with_custom_enum {
+        println!("(Pattern Matching > if let MightHaveValue::HasValueAvailable) Item: {:#?}", value);
+    } else if let MightHaveValue::NoValueAvailable = item_with_custom_enum {
+        println!("(Pattern Matching > if let MightHaveValue::NoValueAvailable) Nothing at that index");
+    }
+
+    // #55 Replacing Custom Enum with Option
+    let item_with_option = catalog.get_by_index_with_option(40);
+    println!("{:#?}", item_with_option);
+    // Match Statement
+    match item_with_option {
+        Some(value) => {
+            println!("(Matching Statement > Option::Some) Item: {:#?}", value);
+        }
+        None => {
+            println!("(Matching Statement > Option::Some) Nothing at that index");
+        }
+    }
+
+    // Pattern Matching
+    if let Some(value) = item_with_option {
+        println!("(Pattern Matching > if let Option::Some) Item: {:#?}", value);
+    } else if let None = item_with_option {
+        println!("(Pattern Matching > if let Option::None) Nothing at that index");
     }
 }
