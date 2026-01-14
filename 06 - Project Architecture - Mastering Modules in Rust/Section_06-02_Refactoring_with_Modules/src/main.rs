@@ -1,6 +1,13 @@
+mod content;
+
+use content::catalog::Catalog;
+use content::media::Media;
+
+/*
 fn print_media(media: Media) {
     println!("{:?}", media);
 }
+ */
 
 fn main() {
     let audiobook = Media::Audiobook {
