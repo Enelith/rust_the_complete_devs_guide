@@ -1,0 +1,6 @@
+[package]
+name = "Section_07-02_Explaining_Result_Enum_1"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
