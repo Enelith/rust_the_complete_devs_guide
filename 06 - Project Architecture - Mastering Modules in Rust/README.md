@@ -150,3 +150,37 @@ pub: export modules
 ```
 mod: import modules
 ```
+
+## super vs. crate: When to Use Which?
+```
+src
+├── main.rs
+└── content
+    ├── mod.rs  (or content.rs, implicitly created by `mod content;`)
+    ├── catalog.rs
+    └── media.rs
+```
+
+In the file `catalog.rs`, we have the following line: `use super::media::Media`.
+1. **super**: This says "go up to the parent module." The `catalog` module is defined within the `content` module, so `super` refers to `content`.
+2. **::media**: From the `content` module, look for a child module named `media`. This exists as `src/content/media.rs`.
+3. **::Media**: Inside the `media` module, find the `Media` item (your `enum`).
+
+Therefore, `use super::media::Media;` is equivalent to `use crate::content::media::Media;` *from this specific file*.
+
+So when to use `super` and when to use `crate` ?
+
+The key difference is relative vs. absolute.
+- `crate` **(Absolute Path)**:
+	- **What it is:** Starts from the crate root (src/lib.rs or src/main.rs).
+	- **Pro:** Robust. If you move the current file (`catalog.rs`) to a different location in the module tree, the import path `crate::content::media::Media` will not break.
+	- **Con:** Can be more verbose for items that are close by in the module tree.
+
+- `super` **(Relative Path)**:
+	- **What it is:** Starts from the parent module.
+	- **Pro:** Can be more concise. It's also useful if you move an entire parent module (like `content`) to a different place in the project; the internal `super` paths will remain valid relative to each other.
+	- **Con:** Brittle. If you move the current file (`catalog.rs`) without moving its siblings, the path `super::media::Media` will likely break because its "parent" has changed relative to where `media` is.
+
+**General Guideline:** 
+
+Many Rust developers prefer using `crate`-based absolute paths for clarity and robustness against refactoring. However, `super` is very useful for accessing items in a sibling module, as seen in your example.
