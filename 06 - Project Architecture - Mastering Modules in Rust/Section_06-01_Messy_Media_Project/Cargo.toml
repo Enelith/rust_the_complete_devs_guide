@@ -1,0 +1,6 @@
+[package]
+name = "Section_06-01_Messy_Media_Project"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
