@@ -113,4 +113,35 @@ fn main() {
 - Most appropriate when you have a **large module**
 - **Has a couple of confusing parts**
 
+### Rules of Modules (Option 3)
+```
+src/
+├── main.rs           	<-- Root Module (imports 'content')
+└── content/          	<-- Content Module
+ ├── mod.rs       		<-- Makes 'content' a module
+ ├── media.rs     		<-- Media Module
+ └── catalog.rs   		<-- Catalog Module
+```
+
+- Every file **and folder** makes its own separate module.
+- Anytime we make a **folder** (ex: 'content' folder), we are **required** to put inside of it a file named ***mod.rs***.
+<br/>
+This folder and this ***mod.rs*** file kind of merge together so to speak, to make another additional module (this module gets named after its folder).
+
+Therefore, based on the previous structure in Option 3, we now got: 
+	- root module (because of the file *'src/main.rs'*)
+	- content module (because of the folder named *'content'*, and the file *'content/mod.rs'*)
+		- media module (because of the file *'content/media.rs'*)
+		- catalog module (because of the file *'content/catalog.rs'*)
+
+- You can't do deeply nested imports.
+	- For example, at some point of time, we're probably going to want to import the `enum Media` into our *root* module (in another word, the `src/media.rs` file). However, we are **not** allowed to do deeply nested imports.
+	- In other words, the *root* module can't reach directly into the *media* module, and get access to something which is defined inside it.
+- In order to do so, we'd have to **chain imports**:
+	- the *content* module: Being the immediate parent, it imports + exports everything from the *media* module (using `pub mod media`)
+	- the *root* module: Can now reach safely into *content*, imports everything from it (using `mod content`), and access to the *media* module
+- Whenever we're talking about *importing something*, we're always important stuff on a **one level deep** at a time. 
+<br/>
+We can't *skip* levels.
+
 
