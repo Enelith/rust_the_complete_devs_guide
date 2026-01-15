@@ -127,3 +127,101 @@ Inner Vec {
 ``` 
 1, 2, 3, 4, 5
 ```
+
+### Strings, String Refs and String Slices
+- **String**:
+```
+let color = String::from("red");
+```
+When running this line of code, initially, 
+- The **Data Segment** will already have stored the literal String "red" inside (because we wrote `red` in our code)
+- Then when creating the String, something will be stored in the **Stack** and the **Heap** (similar to when we created the Vector earlier)
+  - In the **Stack**, we're going to have a *struct* created
+  - At the same time, Rust is going to automatically copy that text data out of the **Data Segment** and store it inside the **Heap**
+```
+String struct {
+    pointer to text in heap: ..., // => Point to "red" inside the Heap
+    length of string in heap: 3,
+    capacity of string in heap: 3
+}
+```
+
+Knowing this, what does it really communicate to us? What does this tell us? Why should we care that something is stored in that Stack or that Heap?
+
+It turns out the location where we store these different things (Stack or Heap) makes a huge difference when it comes down differentiating between those 3 different types (*String*, *&String*, and *&str*) 
+
+--- 
+- **&String**:
+```
+let color = String::from("red");
+let color_red = &color; // => Will create a reference to the String "red" (&String)
+```
+When running this code, 
+- The **Data Segment** will already have stored the literal String "red" inside (because we wrote `red` in our code)
+- We're going to create a *String struct* inside the **Stack** (like before)
+```
+String struct {
+    pointer to text in heap: ..., // => Point to "red" inside the Heap
+    length of string in heap: 3,
+    capacity of string in heap: 3
+}
+```
+- We're going to copy some data from the **Data Segment** into the **Heap** ("red")
+- Then we're trying to have a reference to that `color` variable (`&color`)
+  - So that's going to create a reference to the String value inside the **Stack**
+    - That reference will point to the *String struct* inside the **Stack**
+
+--- 
+
+- **&str** ~ String Slice:
+```
+let name = "me";
+```
+This `&str` refers to a *String slice*.
+
+When we create a String slice by using this kind of expression, we are **NOT** going to use the **Heap** at all!
+
+When running this code, 
+- Because we're writing a String literal, some data will be placed inside the **Data Segment**
+  - **Data Segment** contains `me`
+- We're also going to have a *struct* inside the **Stack**, but this one is only going to have 2 fields
+```
+&str {
+    pointer to text: ..., // => Point directly to "red" inside the Data Segment
+    length of string: 2
+}
+```
+Here's the big difference when using a *String slice*: the pointer to the text does not have to involve a **Heap** allocation.
+<br/>
+Instead, it can just point directly to the data inside our **Data Segment** (so kind of bypassing the **Heap** entirely here).
+
+Another common way to make a *String slice* as well:
+```
+let color = String::from("red");
+let c = color.as_str();
+```
+`color.as_str()` will also create a *String slice*.
+
+- `red` will be stored in the **Data Segment**
+- The `red` from **Data Segment** will be copied into the **Heap**
+- We're going to create a *String struct* inside the **Stack** (like before)
+```
+String struct {
+    pointer to text in heap: ..., // => Point to "red" inside the Heap
+    length of string in heap: 3,
+    capacity of string in heap: 3
+}
+```
+- Then on the next line of code `color.as_str()`, that's where we're going to create our *String slice*
+  - Once again, a *struct* will be created inside the **Stack** representing that *String slice*, but this time around, it will not point to some data inside the **Data Segment**.
+  - Instead, it's going to be pointing at some data in the **Heap** that is owned by some other String.
+```
+&str {
+    pointer to text: ..., // => Also point to "red" inside the Heap
+    length of string: 3
+}
+```
+
+Now, the big question: what does it really matter? Like what's the point of all these different variations?
+<br/>
+And perhaps the biggest question: why is there a *String slice* `&str` as a type at all?
