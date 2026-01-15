@@ -1,0 +1,6 @@
+[package]
+name = "Section_07-03_Exercice_Result_Enum"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
