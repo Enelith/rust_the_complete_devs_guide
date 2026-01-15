@@ -69,5 +69,38 @@ fn divide(a: f64, b: f64) -> OkResult or ErrResult {
     }
 }
 ```
----
 
+### Types of Errors
+Imports a struct defined in the std lib. Used to represent an error:
+```
+use std::io::Error;
+```
+
+Creates an instance of the Error struct:
+```
+Error::other("Can't divide by 0") // <=> Similar to the Bank::new() from before
+```
+
+Many modules in the std lib have their own custom error types.
+
+```
+use std::str::Utf8Error;
+```
+```
+use std::string::FromUtf8Error;
+```
+```
+use std::num::ParseIntError;
+use std::num::ParseFloatError;
+use std::num::TryFromIntError;
+```
+```
+use std::thread::JoinError;
+```
+```
+use std::io::Error;
+```
+
+You can also create your own custom error types.
+
+There isn't really a general-purpose catch-all type of error (Javascript has 'Error', Python has 'Exception', ...)
