@@ -225,3 +225,102 @@ String struct {
 Now, the big question: what does it really matter? Like what's the point of all these different variations?
 <br/>
 And perhaps the biggest question: why is there a *String slice* `&str` as a type at all?
+
+### Why is there &String and &str?
+Both provide a read-only reference to text data.
+
+#### Reason #1
+```
+let color = "red";
+```
+The first reason we have string slices is that it allows us to refer to some text in specifically the **Data Segment**, without allocating any memory in the **Heap**.
+<br/>
+
+*`&str` lets you refer to text in the data segment without a heap allocation*
+
+So it's slightly more performant when we are referring to string literals.
+
+If we didn't have string slice, we would have to write it as follows (with everything in implies):
+```
+let color = String::from("red");
+let color_ref = &color;
+```
+#### Reason #2
+```
+let color = String::from("blue");
+let portion = &color[1..4];
+```
+The other reason we have string slices is that it allows us to slice, or kind of take a portion of some text that has already been placed into the **Heap**.
+
+*`&str` lets you 'slice' (take a portion) of text that is already in the **Heap***
+
+To quickly illustrate this,
+```
+let color = String::from("blue");
+```
+- `blue` will first be placed inside the **Data Segment**, then copied into the **Heap**.
+- A *String struct* will be placed in the **Stack**, 
+  - and its `pointer to text in heap` will point to the value `blue`.
+  - More specifically, it will point to the first character `B` (`B`, `L`, `U`, `E`).
+```
+String struct {
+    pointer to text in heap: ..., // => Point to "B" inside the Heap
+    length of string in heap: 3,
+    capacity of string in heap: 3
+}
+```
+By writing:
+```
+let color = String::from("blue");
+let portion = &color[1..4]; // => Starting from the 1st character, go up to, but not including 4 
+```
+- A *&str struct* will automatically be created and placed inside the **Stack**, 
+  - but its `pointer to text` will now point to the character at index 1 of the value stored in the **Heap**
+  - Aka, it will point to a portion of text starting from the letter `L` (`L`, `U`, `E`)
+
+So this string slice can be used to point at just a portion of a string that is owned by some other data structure in our **Stack**, or in this case, a string.
+
+If we didn't have a string slice, if **we still want to get a read-only ref to the characters "lue"**, we would have to write it as follows to get an equivalent behavior we can imagine:
+```
+let color = String::from("blue");
+let portion = String::from(
+    color.skip(1) // this function doesn't exist, but it gives the idea
+);
+let portion_ref = &portion;
+```
+
+### When do we actually use all these kind of things?
+
+#### String
+```
+let color = String::from("red")
+```
+- Use anytime we want ownership of text
+- Use anytime we want text that can grow or shrink
+
+#### &String
+```
+let color = String::from("red")
+let color_ref = &color
+```
+- Rarely (purposelly) used!
+- Rust will automatically turn `&String` into `&str` for you
+- Another reason is that string slices `&str` kind of have a more immediate sign to developers.
+  - *You look at this, and you know you have a read-only reference to a string. Alright.*
+
+#### &str
+```
+let color = String::from("red");
+let c = color.as_str();
+```
+- Use anytime you don't want to take ownership of text
+- Use anytime you want to refer to a **portion** of a string owned by something else
+
+### Summary
+
+| Name    | When to use                                                                   | Uses memory in...  | Notes                                                      |
+|:--------|:------------------------------------------------------------------------------|:-------------------|:-----------------------------------------------------------|
+| String  | `When you want to take ownership of text data`                              | `Stack` and `Heap` |                                                            | 
+|         | `When you have a string that might grow or shrink`                            |                    |                                                            | 
+| &String | `Usually never`                                                               | `Stack`            | `Rust automatically turns &String into &str for you`       | 
+| &str    | `When you want to read all or a portion of some text owned by something else` | `Stack`            | `Refers directly to heap-allocated or data-allocated text` | 
