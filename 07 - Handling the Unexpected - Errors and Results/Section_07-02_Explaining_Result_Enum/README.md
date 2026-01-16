@@ -371,3 +371,70 @@ fn main() -> Result<(), Error> {
   return Error::with("bad") 
 }
 ```
+
+---
+
+### When to Use Each Technique?
+
+Here are the rules of thumbs that we're going to follow in this course:
+
+|     | Use...                                                     | ... When                                                           |
+|:----|:-----------------------------------------------------------|:-------------------------------------------------------------------|
+| `1` | Use a match or `if let` statement                          | You're ready to meaningfully deal with an error                    | 
+| `2` | Call `.unwrap()` or `.expect()` on the Result              | Quick debugging, or if you want to crash on an `Err`               | 
+| `3` | Use the Try operator (`?`) to unwrap or propagate the Result | You don't have any way to handle the error in the current function |
+
+
+- Example for `1`: Match or `if let` statement
+```
+// => Function that returns a Result
+fn read_config_file() -> Result<String, Error> {
+    fs::read_to_string("config.json")
+}
+
+fn get_config() -> String {
+    let default_config = String::from("{ enable_debug: true }");
+
+    match read_config_file() {
+        Ok(config) => config, // => Case when file is read successfully
+        Err(_err) => { 
+            // => Error! Does something beyond just logging the error
+            println!("Config read err, using default");
+            default_config // => Returns the default_config by default 
+        }
+    }
+}
+
+fn main() {
+    let config = get_config();
+
+    println!("Got a config: {}", config);
+}
+```
+
+- Example for `3`: Use the Try operator (`?`) to unwrap or propagate the Result current function
+
+Task: Read some config data from a file.
+<br/>
+If we fail to read the file, that's it, we don't have any backup. (*If we get an error, we don't have any workaround*)
+```
+// => Function that returns a Result
+fn read_config_file() -> Result<String, Error> {
+    fs::read_to_string("config.json")
+}
+
+fn get_config() -> String {
+    let config = read_config_file()?; // => Don't have any way to handle an Err, propagate it up (to the parent)
+    
+    Ok(config)
+}
+
+// Err can be propagated to main, which will return (and print) it
+fn main() -> Result<(), Error> {
+    let config = get_config()?; 
+    
+    println!("Got a config: {}", config);
+    
+    Ok(())
+}    
+```
