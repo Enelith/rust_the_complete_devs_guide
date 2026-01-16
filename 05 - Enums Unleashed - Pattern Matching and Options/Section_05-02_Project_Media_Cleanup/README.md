@@ -37,6 +37,7 @@ item.expect("There should be a value here")
 ```
 - If `item` is a `Some`, returns the value in the `Some`.
 - If `item` is a `None`, prints the provided debug message and panics!
+  - Use when we **want** to crash if something goes wrong
 
 ---
 ### 3) .unwrap_or(&...)

@@ -8,7 +8,10 @@ fn main() {
     version_error_lifetime();
     println!("\n-----------------------------\n");
 
-    writing_data_to_file_process();
+    writing_data_to_file_1();
+    println!("\n-----------------------------\n");
+
+    writing_data_to_file_2();
     println!("\n-----------------------------\n");
 }
 
@@ -77,17 +80,17 @@ fn version_error_lifetime() {
     println!("Found {} errors: {:#?}", errors.len(), errors);
 }
 
-// #07.79
-fn writing_data_to_file_process() {
-    println!("WRITING DATA TO FILE:");
+// #07.79 - Imbricated Matches
+fn writing_data_to_file_1() {
+    println!("WRITING DATA TO FILE Version 1:");
 
     match fs::read_to_string("logs.txt") {
         Ok(text_that_was_read) => {
             let errors_string_slice = extract_errors_fix(text_that_was_read.as_str());
 
             // Since fs::write return a Result, we're going to have imbricated match, which is going to be messy, but we'll fix it afterwards
-            match fs::write("errors.txt", errors_string_slice.join("\n")) {
-                Ok(..) => println!("Wrote errors.txt"),
+            match fs::write("errors_1.txt", errors_string_slice.join("\n")) {
+                Ok(..) => println!("Wrote errors_1.txt"),
                 Err(writing_to_file_failed) => {
                     println!("Failed to write to file: {}", writing_to_file_failed);
                 }
@@ -97,6 +100,21 @@ fn writing_data_to_file_process() {
             println!("Failed to read file: {}", why_this_failed);
         }
     }
+}
+
+// #07.80 - Alternative to Nested Matches
+fn writing_data_to_file_2() {
+    println!("WRITING DATA TO FILE Version 2:");
+
+    // If the Return of fs::read_to_string is an OK, text won't be a variant or enum, it's the actual raw text (String).
+    // If it fails and we get the Err variant, the process panics here, with our custom error message.
+    let text = fs::read_to_string("logs.txt")
+        .expect("Failed to read logs.txt");
+
+    let errors_string_slice = extract_errors_fix(text.as_str());
+
+    fs::write("errors_2.txt", errors_string_slice.join("\n"))
+        .expect("Failed to write errors_2.txt");
 }
 
 fn extract_errors(text: &str) -> Vec<&str> {

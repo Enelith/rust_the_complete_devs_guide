@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "Section_07-02_Explaining_Result_Enum_1"
+name = "Section_07-02_Explaining_Result_Enum"
 version = "0.1.0"

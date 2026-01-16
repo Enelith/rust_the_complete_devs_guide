@@ -1,4 +1,4 @@
-# Section_07-02_Explaining_Return_Enum_1
+# Section_07-02_Explaining_Return_Enum
 
 ### The function definition
 
@@ -154,9 +154,9 @@ Those operations either fail (in which case they'll probably return an error), o
 have a value to return
 to describe the success in any way.
 
-So what do we do in those case ?
+So what do we do in those cases ?
 
-Let's create the very simple following method:
+Let's create the basic following method:
 
 ```
 fn validate_email(email: String) -> Result<???, Error> {
@@ -237,4 +237,58 @@ fn main() {
   let red = rgb.0;
 }
 ```
+
+## Ways to Handle a Result<>
+### A) Using Match Statements
+It can very quickly be messy.
+```
+    // fs::read_to_string return a Result
+    match fs::read_to_string("logs.txt") {
+        Ok(text_that_was_read) => {
+            // 'extract_errors_fix()' definition in Section_07-01_Logs
+            let errors_string_slice = extract_errors_fix(text_that_was_read.as_str());
+
+            // fs::write return a Result
+            match fs::write("errors.txt", errors_string_slice.join("\n")) {
+                Ok(..) => println!("Wrote errors.txt"),
+                Err(writing_to_file_failed) => {
+                    println!("Failed to write to file: {}", writing_to_file_failed);
+                }
+            }
+        }
+        Err(why_this_failed) => {
+            println!("Failed to read file: {}", why_this_failed);
+        }
+    }
+```
+
+### B) Using Result Enum Methods
+Many of the Option Enum methods works with the Return Enum (check the Section_05-02_Project_Media_Cleanup's README.md file)
+#### 1. `.unwrap()`
+``` 
+text.unwrap()
+```
+- If `text` is an `Ok`, returns the value in the `Ok`.
+- If `text` is an `Err`, panics!
+  - **Use for quick debugging or examples**
+
+---
+#### 2. `.expect(...)`
+``` 
+text.expect("Couldn't open the file")
+```
+- If `text` is an `Ok`, returns the value in the `Ok`.
+- If `text` is an `Err`, prints the provided debug message and panics!
+  - Use when we **want** to crash if something goes wrong
+
+---
+#### 3. `.unwrap_or(&...)`
+``` 
+text.unwrap_or(
+  String::from("Backup text")
+)
+```
+- If `text` is an `Ok`, returns the value in the `Ok`.
+- If `text` is an `Err`, returns the provided default value
+  - Use when it makes sense to provide a fallback value
 
