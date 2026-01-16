@@ -28,7 +28,7 @@ fn version_working_fine() {
             println!("[Ref] Found {} errors: {:#?}", errors_string_ref.len(), errors_string_ref);
             println!("[Slice] Found {} errors: {:#?}", errors_string_slice.len(), errors_string_slice);
 
-            let errors_evolved = extract_errors_2(text_that_was_read.as_str());
+            let errors_evolved = extract_errors_optimized(text_that_was_read.as_str());
             println!("[Evolved] Found {} errors: {:#?}", errors_evolved.len(), errors_evolved);
         }
         Err(why_this_failed) => {
@@ -50,8 +50,9 @@ fn version_error_lifetime() {
             println!("Text length: {}", text_that_was_read.len());
 
             // text_that_was_read will show an error as it is: `text_that_was_read` does not live long enough [E0597]
-            errors = extract_errors(text_that_was_read.as_str());
-
+            //errors = extract_errors(text_that_was_read.as_str());
+            // Because as we hit the "}", text_that_was_read is going out of scope, but errors being a Vec<&str> exists and each values inside of it would point to non existing values
+            errors = extract_errors_fix(text_that_was_read.as_str());
         }
         Err(why_this_failed) => {
             println!("Failed to read file: {}", why_this_failed);
@@ -75,8 +76,36 @@ fn extract_errors(text: &str) -> Vec<&str> {
     result
 }
 
-fn extract_errors_2(text: &str) -> Vec<&str> {
+fn extract_errors_optimized(text: &str) -> Vec<&str> {
     text.lines()
         .filter(|line| line.starts_with("ERROR"))
+        .collect()
+}
+
+// While this new function (returning a Vec<String> instead of Vec<&str>) would fix the problem,
+// remember its return also allocates more data into the Heap.
+// (it copies the values of text we're interested in into the Heap ~ which can be an issue if the data was lots of GigaBytes in size)
+
+// If our function receives some text and we need to return text, should we always return a String?
+// => Depends!
+// Returning a String required extra allocations on the Heap
+// We would have been fine returning &str if we didn't expect it to outlive the input text
+fn extract_errors_fix(text: &str) -> Vec<String> {
+    let split_text = text.split("\n");
+
+    let mut result = Vec::new();
+
+    for line in split_text {
+        if line.starts_with("ERROR") {
+            result.push(line.to_string());
+        }
+    }
+    result
+}
+
+fn extract_errors_fix_optimized(text: &str) -> Vec<String> {
+    text.lines()
+        .filter(|line| line.starts_with("ERROR"))
+        .map(|line| line.to_string())
         .collect()
 }
