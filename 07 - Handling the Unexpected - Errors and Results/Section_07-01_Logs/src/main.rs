@@ -1,7 +1,9 @@
 // 'std' = 'Standard Library', 'fs' = 'File System'
 use std::fs;
+use std::io::Error;
 
-fn main() {
+// We added a return to the main function to show how to use the Try operator in the `writing_data_to_file_3()` method
+fn main() -> Result<(), Error>{
     version_working_fine();
     println!("\n-----------------------------\n");
 
@@ -13,6 +15,8 @@ fn main() {
 
     writing_data_to_file_2();
     println!("\n-----------------------------\n");
+
+    writing_data_to_file_3()
 }
 
 fn version_working_fine() {
@@ -115,6 +119,30 @@ fn writing_data_to_file_2() {
 
     fs::write("errors_2.txt", errors_string_slice.join("\n"))
         .expect("Failed to write errors_2.txt");
+}
+
+// #07.81 - The Try Operator
+fn writing_data_to_file_3() -> Result<(), Error> {
+    println!("WRITING DATA TO FILE Version 3:");
+
+    let text = fs::read_to_string("logs.txt")?;
+    // println!("{:#?}", text.len());
+    // Instead of OK( 1036 ), this would print 1036 (unwrapping the OK variant directly)
+
+    // If the Return of fs::read_to_string returns an `Err` variant, it will print:
+    //let text = fs::read_to_string("./qdqsd/logs.txt")?;
+    /*
+    Error: Os { code: 2, kind: NotFound, message: "Le fichier spécifié est introuvable." }
+    error: process didn't exit successfully: `target\debug\Section_07-01_Logs.exe` (exit code: 1)
+
+    Process finished with exit code 1
+    */
+
+    let errors_string_slice = extract_errors_fix(text.as_str());
+
+    fs::write("errors_3.txt", errors_string_slice.join("\n"))?;
+
+    Ok(())
 }
 
 fn extract_errors(text: &str) -> Vec<&str> {

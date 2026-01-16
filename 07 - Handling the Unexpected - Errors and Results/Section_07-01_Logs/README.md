@@ -381,3 +381,80 @@ text.unwrap_or(
 - If `text` is an `Err`, returns the provided default value
   - Use when it makes sense to provide a fallback value
 
+
+### C) The question mark `?` operator, aka Try operator
+Through this course, we've been making our main function, and it's never been returning anything.
+```
+fn main() {
+  println!("Hello World!");
+}
+```
+While it **doesn't have to** return anything, we are allowed to return one very specific type of value 
+from main if we want to (this is totally optional).
+
+So from `main`: 
+```
+// use std::io::Error;
+
+fn main() -> Result<(), Error> {
+
+  /*
+    It would need to either return: 
+   Ok(())
+   
+   Err(Error::other("Something went wrong"))
+   */
+}
+```
+- You can have it return a Result
+- If you return an `Ok` variant, Rust won't do anything
+- If you return an `Err` variant, Rust will print the value in the `Err` variant
+
+We're going to combine this feature altogether, with the new operator.
+
+This will give us a really good alternative for error handling that is possibly debatable, 
+maybe a little bit better than using the Result Enum methods, or using the Match Statements.
+
+#### Explaining the Try `?` operator
+`?` operator gets added onto functions that returns a **Result**.
+
+From this code,
+```
+fn main() -> Result<(), Error> {
+  let text = fs::read_to_string("logs.txt")?; // Note the `?` at the very end
+}
+```
+the `fs::read_to_string()` will either return an `Ok` or an `Err`.
+
+--- 
+- If the function returns an `Ok` variant:
+  <br/>(it doesn't actually change your code, but we can imagine what it does)
+  <br/>the `?` operator is going to see that we returned some `Ok` variant that contains some String
+```
+fn main() -> Result<(), Error> {
+  let text = Ok("blabla") 
+}
+```
+Because we return the `Ok` variant, the `?` is going to automatically unwrap the value inside, 
+and assign that value to whatever variables we declared.
+```
+fn main() -> Result<(), Error> {
+  let text = "blabla" 
+}
+```
+
+--- 
+- If the function returns an `Err` variant:
+  <br/>In that scenario, something very very very different is going to occur.
+```
+fn main() -> Result<(), Error> {
+  let text = Err(Error::with("bad")) 
+}
+```
+When `?` sees that we got back the `Err` variant, it's going to automatically unwrap the value inside of `Err`,
+and then it's going to automatically return that value early.
+```
+fn main() -> Result<(), Error> {
+  return Error::with("bad") 
+}
+```
