@@ -7,6 +7,9 @@ fn main() {
 
     version_error_lifetime();
     println!("\n-----------------------------\n");
+
+    writing_data_to_file_process();
+    println!("\n-----------------------------\n");
 }
 
 fn version_working_fine() {
@@ -25,11 +28,23 @@ fn version_working_fine() {
             // Or convert text_that_was_read into a &str using .as_str()
             let errors_string_slice = extract_errors(text_that_was_read.as_str());
 
-            println!("[Ref] Found {} errors: {:#?}", errors_string_ref.len(), errors_string_ref);
-            println!("[Slice] Found {} errors: {:#?}", errors_string_slice.len(), errors_string_slice);
+            println!(
+                "[Ref] Found {} errors: {:#?}",
+                errors_string_ref.len(),
+                errors_string_ref
+            );
+            println!(
+                "[Slice] Found {} errors: {:#?}",
+                errors_string_slice.len(),
+                errors_string_slice
+            );
 
             let errors_evolved = extract_errors_optimized(text_that_was_read.as_str());
-            println!("[Evolved] Found {} errors: {:#?}", errors_evolved.len(), errors_evolved);
+            println!(
+                "[Evolved] Found {} errors: {:#?}",
+                errors_evolved.len(),
+                errors_evolved
+            );
         }
         Err(why_this_failed) => {
             println!("Failed to read file: {}", why_this_failed);
@@ -60,6 +75,28 @@ fn version_error_lifetime() {
     }
 
     println!("Found {} errors: {:#?}", errors.len(), errors);
+}
+
+// #07.79
+fn writing_data_to_file_process() {
+    println!("WRITING DATA TO FILE:");
+
+    match fs::read_to_string("logs.txt") {
+        Ok(text_that_was_read) => {
+            let errors_string_slice = extract_errors_fix(text_that_was_read.as_str());
+
+            // Since fs::write return a Result, we're going to have imbricated match, which is going to be messy, but we'll fix it afterwards
+            match fs::write("errors.txt", errors_string_slice.join("\n")) {
+                Ok(..) => println!("Wrote errors.txt"),
+                Err(writing_to_file_failed) => {
+                    println!("Failed to write to file: {}", writing_to_file_failed);
+                }
+            }
+        }
+        Err(why_this_failed) => {
+            println!("Failed to read file: {}", why_this_failed);
+        }
+    }
 }
 
 fn extract_errors(text: &str) -> Vec<&str> {
