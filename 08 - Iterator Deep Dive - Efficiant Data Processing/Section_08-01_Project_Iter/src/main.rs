@@ -128,3 +128,9 @@ fn explode(elements: &[String]) -> Vec<Vec<String>> {
         )
         .collect() // <= Create a Vec<Vec<String>>
 }
+
+// As for the types of "search" and "fallback", we need to remember and question ourself if we're taking ownership of the value (full String), if we're trying to modify it (mut), or if we're going to use it in some sort of calculation (&str).
+// In our case, a calculation would fit both search and fallback, therefore &str.
+fn find_color_or(elements: &[String], search: &str, fallback: &str) -> String {
+
+}
