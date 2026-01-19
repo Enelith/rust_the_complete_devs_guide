@@ -76,6 +76,11 @@ fn main() {
     println!(" ---------------- ");
     let exploded = explode(&destination);
     println!("Exploded: {:#?}", exploded);
+
+    // 08.97 Iterators Wrapup
+    println!(" ---------------- ");
+    let found_color = find_color_or(&destination, "azlkjdalkdlkdaj", "Orange");
+    println!("Found color: {:#?}", found_color);
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -132,5 +137,17 @@ fn explode(elements: &[String]) -> Vec<Vec<String>> {
 // As for the types of "search" and "fallback", we need to remember and question ourself if we're taking ownership of the value (full String), if we're trying to modify it (mut), or if we're going to use it in some sort of calculation (&str).
 // In our case, a calculation would fit both search and fallback, therefore &str.
 fn find_color_or(elements: &[String], search: &str, fallback: &str) -> String {
+    elements.iter() // <= .iter() will give us read-only references
+        // '.find()': Iterator consumer. Calls 'next' on the iterator until it gets an element that returns a truthy value from the closure function.
+        // Returns an 'Option' Some(value) if it found something
+        // Returns an 'Option' None if it didn't find anything
+        .find(|el| el.contains(search))
+        // '.map_or()': Is a method that belongs to the 'Option' enum. (HAS NOTHING TO DO WITH ITERATORS!!!)
+        // If the Option is a None, it will return the first argument (aka the fallback)
+        // If the Option is a Some, it will take the value out of Some and run it through the closure function.
+        .map_or(
+            String::from(fallback),
+            |el| el.to_string()
+        )
 
 }
