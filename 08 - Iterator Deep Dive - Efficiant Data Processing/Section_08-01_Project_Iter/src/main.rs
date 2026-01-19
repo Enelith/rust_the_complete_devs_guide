@@ -43,6 +43,7 @@ fn main() {
 
     // 08.89 Reminder on Ownership and Borrowing
     shorten_strings(&mut colors);
+    println!("{:#?}", colors);
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -67,5 +68,8 @@ fn print_elements_3(elements: &Vec<String>) {
 }
 
 fn shorten_strings(elements: &mut Vec<String>) {
-
+    // Solution with a bug
+    elements.iter_mut()
+        .for_each(|element| element.truncate(1));
+    // You'll get an on 'element': Cannot borrow immutable local variable `element` as mutable
 }

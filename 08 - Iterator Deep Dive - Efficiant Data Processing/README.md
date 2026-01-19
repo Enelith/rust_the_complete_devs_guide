@@ -92,4 +92,13 @@ Here's how we do it from this code example:
         .map(|el|, format!("{} {}", el, el))
         .for_each(|element| println!("{}", element));
 ```
-The `map` function is an example of an iterator adapter.
+The `map` function is an example of an iterator adapter.	
+
+## Iterator with Mutable Refs
+- `iter()`: The iterator will give you a **read-only reference** to each element
+- `iter_mut()`: The iterator will give you a **mutable reference** to each element
+- `into_iter()`: The iterator will give you **ownership** of each element, *unless called on a mutable ref to a vector*
+
+On a quick side note that in Rust, there are many functions and methods that have the word *into* in them.
+<br/>
+Anytime you see the word *into*, that kind of means this is a function that's going to take **ownership** of something.   
