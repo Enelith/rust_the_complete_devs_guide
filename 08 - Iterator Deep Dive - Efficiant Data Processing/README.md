@@ -94,7 +94,7 @@ Here's how we do it from this code example:
 ```
 The `map` function is an example of an iterator adapter.	
 
-## Iterator with Mutable Refs
+### Iterator with Mutable Refs
 - `iter()`: The iterator will give you a **read-only reference** to each element
 - `iter_mut()`: The iterator will give you a **mutable reference** to each element
 - `into_iter()`: The iterator will give you **ownership** of each element, *unless called on a mutable ref to a vector*
@@ -106,3 +106,61 @@ Anytime you see the word *into*, that kind of means this is a function that's go
 ## Collect
 `.collect()` is an iterator **consumer**. It will automatically call `.next()` for you.
 
+Just as Iterators can be used to iterate over many kinds of data structures (`Vec<String>`, HashMap, Double Linked List, ...), `.collect()` can gather values into many different kinds of data structures.
+
+Here's the part that we really need to understand, because it's going to have a big impact on how you write code in the future, and how you read code that is written by other engineers.
+
+The real question here, the real interesting part, is how does the `.collect()` function decide what kind of structure it is going to create?
+
+When writing:
+```
+fn to_uppercase(elemenst: &[String]) -> Vec<String> {
+	elements.iter()
+		.map(|el| el.to_uppercase())
+		.collect()
+}
+```
+- What am I collecting everything into using `.collect()` ?!?
+    - Since the function is suppose to return a Vec, whatever `.collect()` returns is going to be what `to_uppercase` returns.
+    - `.collect()` saw that we wanted to return a vector of strings (`-> Vec<String>`)
+    - so `.collect()` will return a vector of strings.
+    - Therefore, `.collect()` used the *return type annotation* to decide to make a vector of strings.
+
+As mentionned, `.collect()` is going to take a loolk at *type annotations*, that can be placed in one of three locations.
+- One possible place it's going to look is on the return type of your function. 
+  - Now this is only valid or only relevant when the `.collect()`call is the returned value inside your function.
+  - In other words, if we were to add in an additional variable declaration after the `.collect()`, then in this scenario, `.collect()` can't look at the return type to figure out what kind of data structure it should make.  
+  - So we are only going to look at the *return type annotation* if the `.collect()` is the last statement of the function.
+```
+fn to_uppercase(elemenst: &[String]) -> i32 {
+	elements.iter()
+		.map(|el| el.to_uppercase())
+		.collect(); // <= ???
+		
+	let value = 5;
+	value
+}
+```
+
+- The second place that it might look is if we are calling `.collect()` and then assigning the result to a variable.
+  - The `.collect()` call is going to take a look at whatever type annotation we added onto that variable.
+```
+fn to_uppercase(elements: &[String]) -> Vec<String> {
+	// We declared 'collected' as a Vec<String>
+	let collected: Vec<String> = elements.iter()
+	    .map(|el| el.to_uppercase())
+	    .collect();
+
+    collected
+}
+```
+
+- The third (that's what we're going to generally favor in this course) is by adding in this extra little bit of syntax, next to the word *collect*.
+  - This syntax is referred to as *Turbofish*.
+```
+fn to_uppercase(elements: &[String]) -> Vec<String> {
+	elements.iter()
+		.map(|el| el.to_uppercase())
+		.collect::<Vec<String>>() // <=
+}
+```
