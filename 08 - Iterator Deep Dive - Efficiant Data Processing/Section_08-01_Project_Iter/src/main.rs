@@ -40,10 +40,17 @@ fn main() {
     println!(" > Using iterator adapters & consumers");
     print_elements_3(&colors);
 
-
     // 08.89 Reminder on Ownership and Borrowing
-    shorten_strings(&mut colors);
+    shorten_strings(&mut colors[1..3]);
     println!("{:#?}", colors);
+    /*
+    Will output:
+    [
+        "red",
+        "g",
+        "b",
+    ]
+     */
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -57,19 +64,19 @@ fn print_elements_2(elements: &Vec<String>) {
     // a 'closure' is an anonymous function (that has no name assigned to it)
     // To create a 'closure' in Rust, we put in 2 pipe symbols '||', and we're receiving our arguments in between those 2 pipes.
     // Right after those pipes is our function body.
-    elements.iter()
-        .for_each(|element| println!("{}", element));
+    elements.iter().for_each(|element| println!("{}", element));
 }
 
 fn print_elements_3(elements: &Vec<String>) {
-    elements.iter()
+    elements
+        .iter()
         .map(|el| format!("{} {}", el, el))
         .for_each(|element| println!("{}", element));
 }
 
-fn shorten_strings(elements: &mut Vec<String>) {
+// Note that using [String] instead of Vec<String> allows you to pass a part of a vector (Vec<String> would expect you to pass the whole vector)
+fn shorten_strings(elements: &mut [String]) {
     // Solution with a bug
-    elements.iter_mut()
-        .for_each(|element| element.truncate(1));
+    elements.iter_mut().for_each(|element| element.truncate(1));
     // You'll get an on 'element': Cannot borrow immutable local variable `element` as mutable
 }
