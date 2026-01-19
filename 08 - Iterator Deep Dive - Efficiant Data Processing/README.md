@@ -97,11 +97,22 @@ The `map` function is an example of an iterator adapter.
 ### Iterator with Mutable Refs
 - `iter()`: The iterator will give you a **read-only reference** to each element
 - `iter_mut()`: The iterator will give you a **mutable reference** to each element
-- `into_iter()`: The iterator will give you **ownership** of each element, *unless called on a mutable ref to a vector*
+- `into_iter()`: The iterator will give you **ownership** of each element (values), *unless called on a (mutable) ref to a vector*
 
 On a quick side note that in Rust, there are many functions and methods that have the word *into* in them.
 <br/>
 Anytime you see the word *into*, that kind of means this is a function that's going to take **ownership** of something.
+
+### Into_Iter
+`.into_iter()` will give you something different depending on how its called.
+
+| Calling                    | Iterator created ouf of... | Will produce...                                     |
+|:---------------------------|:---------------------------|:----------------------------------------------------|
+| `&colors.into_iter()`      | a reference                | refs to each value                                  |
+| `&mut colors.into_iter()`  | a mutable reference        | mutable refs to each value                          |
+| `colors.into_iter()`       | a value                    | each value. *Also moves ownership of these values.* |
+
+Therefore, using `.into_iter()` smartly allows you to replace `.iter()` and `.iter_mut()` entirely.
 
 ## Collect
 `.collect()` is an iterator **consumer**. It will automatically call `.next()` for you.
