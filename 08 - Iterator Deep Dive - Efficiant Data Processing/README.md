@@ -51,6 +51,7 @@ let mut colors_iter = colors.iter();
 
 Reminder: We make use of the `mut` keyword anytime we expact to reassign a variable, or we expect to modify the value in some way.
 
+
 We usually don't call `next` on an iterator manually.
 <br/>
 Instead:
@@ -70,5 +71,13 @@ elements: &Vec<String>) {
 - Call `next` on the iterator, and unwrap the Option that comes back
 - Break once `next` returns a `None` (variant)
 
+### Iterator consumers
 
+Iterators are *lazy*. Nothing happens until...
+- A) You call `next`
+- B) You use a function that calls `next` automatically (they're called *iterator consumers*)
+
+`for_each` is an iterator **consumer**.
+
+It will repeatedly call `next` on the iterator until it gets a `None` variant from the Option enum.
 
