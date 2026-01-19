@@ -18,7 +18,7 @@ fn main() {
     // https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.filter
     let negative_accounts = accounts
         .iter()
-
+        .filter( |account| account.balance < 0)
         .collect::<Vec<_>>();
 
     println!("Accounts with negative balance: {:#?}", negative_accounts);
