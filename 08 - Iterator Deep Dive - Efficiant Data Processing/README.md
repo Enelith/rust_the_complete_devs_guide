@@ -81,3 +81,15 @@ Iterators are *lazy*. Nothing happens until...
 
 It will repeatedly call `next` on the iterator until it gets a `None` variant from the Option enum.
 
+### Iterator adapters
+Iterator adapters add in a little extra little processing step.
+
+An iterator **adapter** doesn't actually call `next` to be called, so they don't cause any iteration until consumed by an iterator **consumer**.
+
+Here's how we do it from this code example:
+```
+    elements.iter()
+        .map(|el|, format!("{} {}", el, el))
+        .for_each(|element| println!("{}", element));
+```
+The `map` function is an example of an iterator adapter.

@@ -35,6 +35,11 @@ fn main() {
     println!(" > Using iterator consumers");
     print_elements_2(&colors);
 
+    // 08.86 Using iterator adapters & consumers
+    println!(" ---------------- ");
+    println!(" > Using iterator adapters & consumers");
+    print_elements_3(&colors);
+
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -49,5 +54,11 @@ fn print_elements_2(elements: &Vec<String>) {
     // To create a 'closure' in Rust, we put in 2 pipe symbols '||', and we're receiving our arguments in between those 2 pipes.
     // Right after those pipes is our function body.
     elements.iter()
+        .for_each(|element| println!("{}", element));
+}
+
+fn print_elements_3(elements: &Vec<String>) {
+    elements.iter()
+        .map(|el| format!("{} {}", el, el))
         .for_each(|element| println!("{}", element));
 }
