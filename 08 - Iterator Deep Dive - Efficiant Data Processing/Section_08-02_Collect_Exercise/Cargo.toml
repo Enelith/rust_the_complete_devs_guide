@@ -1,0 +1,6 @@
+[package]
+name = "Section_08-02_Collect_Exercise"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
