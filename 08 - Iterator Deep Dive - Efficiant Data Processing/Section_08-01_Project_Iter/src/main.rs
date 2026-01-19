@@ -71,6 +71,11 @@ fn main() {
     let mut destination = vec![];
     move_elements(colors, &mut destination);
     println!("Destination: {:#?}", destination);
+
+    // 08.95 Inner Maps
+    println!(" ---------------- ");
+    let exploded = explode(&destination);
+    println!("Exploded: {:#?}", exploded);
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -112,4 +117,14 @@ fn to_uppercase(elements: &[String]) -> Vec<String> {
 fn move_elements(vec_a: Vec<String>, vec_b: &mut Vec<String>) {
     vec_a.into_iter()
         .for_each(|el| vec_b.push(el))
+}
+
+fn explode(elements: &[String]) -> Vec<Vec<String>> {
+    elements.iter()
+        .map(|el|
+            el.chars() // <= `.chars()`: Returns an iterator over the chars of a string slice.
+                .map(|c| c.to_string()) // <= Turning each characters into a String
+                .collect() // <= Create a Vec<String> which will contain all characters of a string, as String (ex: "red" => ["r", "e", "d"]
+        )
+        .collect() // <= Create a Vec<Vec<String>>
 }
