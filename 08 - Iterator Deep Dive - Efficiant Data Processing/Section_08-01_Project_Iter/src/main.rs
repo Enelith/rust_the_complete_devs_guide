@@ -41,16 +41,32 @@ fn main() {
     print_elements_3(&colors);
 
     // 08.89 Reminder on Ownership and Borrowing
-    shorten_strings(&mut colors[1..3]);
+    println!(" ---------------- ");
+    shorten_strings(&mut colors[2..3]);
     println!("{:#?}", colors);
     /*
     Will output:
     [
         "red",
-        "g",
+        "green",
         "b",
     ]
      */
+
+    // 08.92 Collecting elements from an Iterator
+    println!(" ---------------- ");
+    let uppercased = to_uppercase(&colors);
+    println!("{:#?}", uppercased);
+    /*
+    Will output:
+    [
+        "RED",
+        "GREEN",
+        "B",
+    ]
+
+     */
+
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -74,9 +90,16 @@ fn print_elements_3(elements: &Vec<String>) {
         .for_each(|element| println!("{}", element));
 }
 
-// Note that using [String] instead of Vec<String> allows you to pass a part of a vector (Vec<String> would expect you to pass the whole vector)
+// Note that using [String] instead of Vec<String> allows you to pass a portion of a vector (Vec<String> would expect you to pass the whole vector)
 fn shorten_strings(elements: &mut [String]) {
     // Solution with a bug
-    elements.iter_mut().for_each(|element| element.truncate(1));
+    elements.iter_mut()
+        .for_each(|element| element.truncate(1));
     // You'll get an on 'element': Cannot borrow immutable local variable `element` as mutable
+}
+
+fn to_uppercase(elements: &[String]) -> Vec<String> {
+    elements.iter()
+        .map(|el| el.to_uppercase())
+        .collect()
 }

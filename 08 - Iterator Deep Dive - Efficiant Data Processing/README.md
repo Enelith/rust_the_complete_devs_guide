@@ -101,4 +101,8 @@ The `map` function is an example of an iterator adapter.
 
 On a quick side note that in Rust, there are many functions and methods that have the word *into* in them.
 <br/>
-Anytime you see the word *into*, that kind of means this is a function that's going to take **ownership** of something.   
+Anytime you see the word *into*, that kind of means this is a function that's going to take **ownership** of something.
+
+## Collect
+`.collect()` is an iterator **consumer**. It will automatically call `.next()` for you.
+
