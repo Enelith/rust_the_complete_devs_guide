@@ -19,3 +19,17 @@ let colors = vec![
 | `explode()`         | Turns a Vec<String> into a Vec<Vec<String>>          | 
 | `find_color_or()`   | Finds a matching element or returns a fallback       | 
 
+### Shorten_strings
+- `shorten_strings()` should modify the strings in the vector
+- We do *NOT* want to create a new vector
+
+Strings in Rust have a method tied to them called `truncate`.
+
+- **truncate()** : Modifies a string in place
+```
+fn main() {
+    let mut color = String::from("blue");
+    
+    color.truncate(1); // color becomes just "b"
+}
+```

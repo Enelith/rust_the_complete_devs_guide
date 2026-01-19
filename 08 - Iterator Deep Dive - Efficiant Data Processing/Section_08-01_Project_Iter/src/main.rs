@@ -1,5 +1,5 @@
 fn main() {
-    let colors = vec![
+    let mut colors = vec![
         String::from("red"),
         String::from("green"),
         String::from("blue"),
@@ -35,11 +35,14 @@ fn main() {
     println!(" > Using iterator consumers");
     print_elements_2(&colors);
 
-    // 08.86 Using iterator adapters & consumers
+    // 08.87 Using iterator adapters & consumers
     println!(" ---------------- ");
     println!(" > Using iterator adapters & consumers");
     print_elements_3(&colors);
 
+
+    // 08.89 Reminder on Ownership and Borrowing
+    shorten_strings(&mut colors);
 }
 
 fn print_elements_1(elements: &Vec<String>) {
@@ -61,4 +64,8 @@ fn print_elements_3(elements: &Vec<String>) {
     elements.iter()
         .map(|el| format!("{} {}", el, el))
         .for_each(|element| println!("{}", element));
+}
+
+fn shorten_strings(elements: &mut Vec<String>) {
+
 }
