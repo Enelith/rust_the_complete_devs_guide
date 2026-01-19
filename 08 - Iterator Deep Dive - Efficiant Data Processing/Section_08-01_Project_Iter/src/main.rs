@@ -4,8 +4,7 @@ fn main() {
         String::from("green"),
         String::from("blue"),
     ];
-
-    // Let's create an iterator
+    // 08.84 Let's create an iterator
     let mut colors_iter = colors.iter();
 
     println!("{:#?}", colors_iter.next());
@@ -25,4 +24,17 @@ fn main() {
     )
     None
      */
+
+    // 08.85 Using For Loops with Iterators
+    println!(" ---------------- ");
+    print_elements(&colors);
+
+
+    println!(" ---------------- ");
+}
+
+fn print_elements(elements: &Vec<String>) {
+    for element in elements {
+        println!("{}", element);
+    }
 }

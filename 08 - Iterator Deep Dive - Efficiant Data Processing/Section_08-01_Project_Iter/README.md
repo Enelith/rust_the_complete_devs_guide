@@ -19,4 +19,3 @@ let colors = vec![
 | `explode()`         | Turns a Vec<String> into a Vec<Vec<String>>          | 
 | `find_color_or()`   | Finds a matching element or returns a fallback       | 
 
-

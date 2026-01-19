@@ -50,3 +50,25 @@ let mut colors_iter = colors.iter();
 ```
 
 Reminder: We make use of the `mut` keyword anytime we expact to reassign a variable, or we expect to modify the value in some way.
+
+We usually don't call `next` on an iterator manually.
+<br/>
+Instead:
+- Use a `for loop`. Automatically creates an iterator and calls `next` on it.
+- Use iterator adaptors and consumers (built-in functions) like `for_each`, `collect`, `map`, etc
+
+### For loops
+```
+elements: &Vec<String>) {
+    for element in elements {
+        println!("{}", element);
+    }
+}
+```
+`for loops` will:
+- Automatically create an iterator for the vector
+- Call `next` on the iterator, and unwrap the Option that comes back
+- Break once `next` returns a `None` (variant)
+
+
+
