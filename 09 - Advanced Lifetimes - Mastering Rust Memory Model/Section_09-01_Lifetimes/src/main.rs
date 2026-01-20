@@ -5,9 +5,8 @@ fn main() {
         String::from("typescript"),
     ];
 
-
     let result = next_language(&languages, "go");
-    println!("Next language: {:#?}", result);
+    println!("Next language: {}", result);
 
     println!(" --------------- ");
 }

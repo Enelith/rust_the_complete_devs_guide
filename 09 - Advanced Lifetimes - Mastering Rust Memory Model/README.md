@@ -25,6 +25,7 @@ fn longest<'a>(str_a: &'a str, str_b: &'a str) -> &'a str {
 ```
 
 They are (obviously as the name suggests) tied to *lifetimes*. As a reminder, *lifetime* describe how long some kind of value is going to live before it gets cleaned up automatically as it goes out of scope.
+
 - The goal of those *lifetime annotations* is to help the compiler make sure refs won't outlive the value they refer to.
 ```
 struct Account {
