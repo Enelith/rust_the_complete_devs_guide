@@ -16,6 +16,7 @@ let languages = vec![
 
 ### Next_language
 
+#### How it works:
 - We're going to make a list of languages, and pass those in as an argument (ex: `languages = [ 'rust', 'go', 'typescript']`)
 - We're also going to pass a String Slice (ex: `'go'`)
 - Then we're going to try to find where this string occurs inside our list of languages.
@@ -174,3 +175,58 @@ We declared the `result` *outside* of this inner scope, and we initialized it *i
     - But the issue here is that we HAVE a reference to that value (`result`), and we can't drop a value while there is a reference to it.
 
 In this scenario, we're going to end up with an error.
+
+---
+
+`next_language()` is a function that's going to take in two references as arguments, and then return a reference.
+
+**Important**:
+
+If you have a function that **takes in two or more refs** and **returns a ref**,
+<br/>
+Rust will make a **huge assumption**:
+- **Rust assumes that the return ref will point at data referred to by one of the arguments**
+```
+fn next_language(languages: &[String], current: &str) -> &str { ... }
+```
+Rust is going to assume that you're never going to create a reference inside that function and return it.
+<br/>
+It's always going to assume that you are always going to be returning a reference that's going to point at either the first argument (or something inside it), or the second argument.
+- **Rust will not analyze the body of your function to figure out whether the return ref is pointing at the first or the second argument.**
+  - Regardless, Rust still wants to know whether the returned reference is going to point at the first, or the second argument
+  - So Rust is going to require YOU to put in something called a *lifetime annotation*
+    - This *lifetime annotation* is going to clarify whether the returned reference is pointing at the first or the second argument.
+```
+To clarify which ref the return ref is pointing at, we have to add a lifetime annotation.
+```
+Here's what we would do to add in a *lifetime annotation*:
+```
+fn next_language<'a>(languages: &'a [String], current: &str) -> &'a str {
+    let mut found = false;
+
+    for lang in languages {
+        if found {
+            return lang; 
+        }
+        if lang == current {
+            found = true;
+        }
+    }
+
+    languages.last()
+        .unwrap()
+}
+```
+- A) We first, right next to the function name, put in some angular brackets, and then add in a single quote `a`
+  - `a` is an identifier (it's just like the name of a variable or a type ~ there's nothing special about the word `a`). 
+    - By convention, it's called `a` (but could have been called `toto` or whatever ~ ex:`<'toto>`).
+    - By including the angle brackets with the single quote, we signal to Rust that a type reference, named `a`, will be introduced (`<'a>`).
+  - `next_language<'a>`: There is a type of ref called `a`
+- B) Then we're going to add in to one of these other references inside the argument list (the first one, the second one, or in some cases both), that single quote A `'a` right after the ampersand `&'a`.
+  - By adding this in to the first argument, we're saying that this first reference is of type `a` (kind of like this first category of references)
+  - `languages: &'a [String]`: This first ref is of type `a`
+- C) And then inside our return reference, we're also going to add in the single quote A `'a` as well.
+  - It's kind of telling Rust that the returned reference is also of type `a`.
+  - `-> &'a str`: This returned ref is also of type `a`
+
+This tells Rust very clearly that the returned reference `-> &'a str` is pointing at (or it's kind of the same thing as) one of the strings inside the first reference `languages: &'a [String]`.
