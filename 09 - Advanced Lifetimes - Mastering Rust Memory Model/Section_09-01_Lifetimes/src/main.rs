@@ -11,8 +11,8 @@ fn main() {
     println!(" --------------- ");
 }
 
-// As a reminder, &[String] allows you to put the full vector as argument, or just a portion of it. &Vec<String> expects the full vector only.
-fn next_language(languages: &[String], current: &str) -> &str {
+// As a reminder, &[String] allows you to put the full vector as an argument, or just a portion of it. &Vec<String> expects the full vector only.
+fn next_language<'a>(languages: &'a [String], current: &str) -> &'a str {
     let mut found = false;
 
     for lang in languages {
@@ -26,6 +26,11 @@ fn next_language(languages: &[String], current: &str) -> &str {
 
     // Returning the very last element of the vector by default.
     // For simplicity, we're going to assume 'languages.last()' will ALWAYS return an Option.Some variant, and not an Option.None.
+    languages.last()
+        .unwrap()
+}
+
+fn last_language(languages: &[String]) -> &str {
     languages.last()
         .unwrap()
 }
