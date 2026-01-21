@@ -9,6 +9,14 @@ fn main() {
     println!("Next language: {}", result);
 
     println!(" --------------- ");
+
+    let last_language = last_language(&languages);
+    println!("Last language: {}", last_language);
+
+    println!(" --------------- ");
+
+    let longest_language = longest_language("typescript", "go");
+    println!("Longest language: {}", longest_language);
 }
 
 // As a reminder, &[String] allows you to put the full vector as an argument, or just a portion of it. &Vec<String> expects the full vector only.
@@ -33,4 +41,12 @@ fn next_language<'a>(languages: &'a [String], current: &str) -> &'a str {
 fn last_language(languages: &[String]) -> &str {
     languages.last()
         .unwrap()
+}
+
+fn longest_language<'a>(lang_a: &'a str, lang_b: &'a str) -> &'a str {
+    if lang_a.len() > lang_b.len() {
+        lang_a
+    } else {
+        lang_b
+    }
 }

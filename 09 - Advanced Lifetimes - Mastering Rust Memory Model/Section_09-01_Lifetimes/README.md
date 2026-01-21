@@ -339,3 +339,42 @@ Omitting lifetime annotations is referred to as **elision**.
 | I `removed` the lifetime annotations     | I `elided` the lifetime annotations      |
 | We can `remove` the annotations          | We can `elide` the annotations           |
 | Think about `removal` of the annotations | Think about `elision` of the annotations |
+
+
+### Longest_Language
+
+Our code and the official documentation are very similar: 
+```
+fn longest_language(lang_a: &str, lang_b: &str) -> &str {
+    if lang_a.len() > lang_b.len() {
+        lang_a
+    } else {
+        lang_b
+    }
+}
+```
+
+However, we have an error (`Missing lifetime specifier [E0106]`) on the returned reference `-> &str`.
+
+As it is, it's not obvious to Rust which of the two arguments the returned reference will be pointing at, 
+since by essence, it will depend of the arguments.
+
+We're still going to use *lifetime annotations*.
+```
+fn longest_language<'a>(lang_a: &'a str, lang_b: &'a str) -> &'a str {
+    if lang_a.len() > lang_b.len() {
+        lang_a
+    } else {
+        lang_b
+    }
+}
+```
+- `fn longest_language<'a>`: There is a type of ref called `a`
+- `lang_a: &'a str` and `lang_b: &'a str`: These are both refs of type `a`
+- `-> &'a str`: This returned ref will point at one of the `a` refs (we don't really know which, but it's going to point at one of them)
+
+The real goal of adding these *lifetime annotations* is to allow other engineers to use your function, 
+look at the function signature, and understand how the returned reference is related to the input reference.
+<br/>
+So it's all about communicating how these references are related, the relationship between the returned reference 
+and the argument references.
