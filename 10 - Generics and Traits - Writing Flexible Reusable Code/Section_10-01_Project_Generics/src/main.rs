@@ -5,7 +5,6 @@ fn solve(a: f64, b: f64) -> f64 {
 }
 
 // First version: we can pass in BOTH f32 or f64
-// Second version: we can pass in any type of numbers
 fn solve_generic_1<T: Float>(a: T, b: T) -> f64 {
     let a_f64 = a.to_f64().unwrap();
     let b_f64 = b.to_f64().unwrap();
@@ -13,7 +12,16 @@ fn solve_generic_1<T: Float>(a: T, b: T) -> f64 {
     (a_f64.powi(2) + b_f64.powi(2)).sqrt()
 }
 
+// Second version: we can pass in any combination of types of numbers implementing Float
 fn solve_generic_2<T: Float, U: Float>(a: T, b: U) -> f64 {
+    let a_f64 = a.to_f64().unwrap();
+    let b_f64 = b.to_f64().unwrap();
+
+    (a_f64.powi(2) + b_f64.powi(2)).sqrt()
+}
+
+// Third version: Any combination of numbers
+fn solve_generic_3<T: ToPrimitive, U: ToPrimitive>(a: T, b: U) -> f64 {
     let a_f64 = a.to_f64().unwrap();
     let b_f64 = b.to_f64().unwrap();
 
@@ -44,4 +52,12 @@ fn main() {
     let b: f64 = 4.0;
 
     println!("Solve Generic <T, U>: {}", solve_generic_2::<f32, f64>(a, b));
+
+
+    // ---------------
+
+    let a: i32 = 3;
+    let b: u8 = 4;
+
+    println!("Solve Generic <T, U> (ToPrimitive): {}", solve_generic_3::<i32, u8>(a, b));
 }
