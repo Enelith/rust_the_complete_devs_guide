@@ -3,6 +3,7 @@
 use super::container::Container;
 
 // Basket is a Generic Struct
+#[derive(Debug)]
 pub struct Basket<T> {
     item: Option<T>,
 }

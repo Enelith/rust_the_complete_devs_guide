@@ -3,6 +3,7 @@
 use super::container::Container;
 
 // Stack is a Generic Struct
+#[derive(Debug)]
 pub struct Stack<T> {
     items: Vec<T>,
 }
