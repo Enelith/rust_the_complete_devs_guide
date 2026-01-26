@@ -1,0 +1,7 @@
+[package]
+name = "Section_10-01_Project_Generics"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+num-traits = "0.2.19"
